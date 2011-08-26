@@ -48,28 +48,59 @@ import feedparser
 # to shoot.
 #
 COMMAND_SETS = {
-    "will" : (
+    "pdo" : (
         ("zero", 0), # Zero/Park to know point (bottom-left)
-        ("right", 3250),
-        ("up", 540),
-        ("fire", 4), # Fire a full barrage of 4 missiles
+        ("right", 2000), 
+        ("fire", 1), # Fire 1 missle
         ("zero", 0), # Park after use for next time
     ),
-    "tom" : (
+    "psimon" : (
         ("zero", 0), 
-        ("right", 4400),
-        ("up", 200),
-        ("fire", 4),
+        ("right", 1000),
+        ("fire", 1),
         ("zero", 0),
     ),
-    "chris" : (      # That's me - just dance around and missfire!
-        ("zero", 0),
-        ("right", 5200),
+    "psandanayake" : (
+        ("zero", 0), 
+        ("right", 1000),
         ("up", 500),
-        ("pause", 5000),
-        ("left", 2200),
-        ("down", 500),
         ("fire", 1),
+        ("zero", 0),
+    ),
+    "cgreben" : (
+        ("zero", 0), 
+        ("right", 2500),
+        ("up", 100),
+        ("fire", 1),
+        ("zero", 0),
+    ),
+    "pbevis" : (
+        ("zero", 0), 
+        ("right", 3500),
+        ("up", 100),
+        ("fire", 1),
+        ("zero", 0),
+    ),
+    "tromano" : (
+        ("zero", 0), 
+        ("right", 4000),
+        ("up", 100),
+        ("fire", 1),
+        ("zero", 0),
+    ),
+   # "asouyave" : (
+   #     ("zero", 0), 
+   #     ("right", 5000),
+   #     ("up", 1000),
+   #     ("fire", 1),
+   #     ("zero", 0),
+   # ),
+    "gbunney" : (
+        ("zero", 0), 
+        ("right", 4500),
+        ("up", 100),
+        ("fire", 1),
+        ("zero", 0),
     ),
 }
 
@@ -101,7 +132,7 @@ def usage():
     print ""
     print "   commands:"
     print "     monitor - poll the bamboo rss feed for new failed builds,"
-    print "               then unleash monitor!!"
+    print "               then unleash warfare!!"
     print ""
     print "     up    - move up <value> milliseconds"
     print "     down  - move down <value> milliseconds"
@@ -197,21 +228,6 @@ def target_user(user):
             break
     if not match:
         print "WARNING: No target command set defined for user %s" % user
-
-
-def jenkins_get_responsible_user(job_name):
-    # Call back to Jenkins and determin who broke the build. (Hacky)
-    # We do this by crudly parsing the changes on the last failed build
-
-    changes_url = JENKINS_SERVER + "/job/" + job_name + "/lastFailedBuild/changes"
-    changedata = urllib.urlopen(changes_url).read()
-
-    # Look for the /user/[name] link
-    m = re.compile('"/user/([^/"]+)').search(changedata)
-    if m:
-        return m.group(1)
-    else:
-        return None
                 
 def detect_failed_builds():
   while True:
