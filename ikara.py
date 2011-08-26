@@ -88,13 +88,13 @@ COMMAND_SETS = {
         ("fire", 1),
         ("zero", 0),
     ),
-   # "asouyave" : (
-   #     ("zero", 0), 
-   #     ("right", 5000),
-   #     ("up", 1000),
-   #     ("fire", 1),
-   #     ("zero", 0),
-   # ),
+    "asouyave" : (
+        ("zero", 0), 
+        ("right", 5000),
+        ("up", 1000),
+        ("fire", 1),
+        ("zero", 0),
+    ),
     "gbunney" : (
         ("zero", 0), 
         ("right", 4500),
