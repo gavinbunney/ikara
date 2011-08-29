@@ -49,59 +49,53 @@ import feedparser
 #
 COMMAND_SETS = {
     "pdo" : (
-        ("zero", 0), # Zero/Park to know point (bottom-left)
-        ("right", 2000), 
+        ("right", 2000),
         ("fire", 1), # Fire 1 missle
         ("zero", 0), # Park after use for next time
     ),
     "psimon" : (
-        ("zero", 0), 
-        ("right", 1000),
+        ("right", 1250),
+        ("up", 200),
         ("fire", 1),
         ("zero", 0),
     ),
     "psandanayake" : (
-        ("zero", 0), 
-        ("right", 1000),
-        ("up", 500),
+        ("right", 1250),
+        ("up", 800),
         ("fire", 1),
         ("zero", 0),
     ),
     "cgreben" : (
-        ("zero", 0), 
-        ("right", 2500),
-        ("up", 100),
+        ("right", 2100),
+        ("up", 500),
         ("fire", 1),
         ("zero", 0),
     ),
     "pbevis" : (
-        ("zero", 0), 
-        ("right", 3500),
-        ("up", 100),
+        ("right", 2700),
+        ("up", 300),
         ("fire", 1),
         ("zero", 0),
     ),
     "tromano" : (
-        ("zero", 0), 
-        ("right", 4000),
-        ("up", 100),
+        ("right", 3000),
+        ("up", 350),
         ("fire", 1),
         ("zero", 0),
     ),
-    "asouyave" : (
-        ("zero", 0), 
-        ("right", 5000),
-        ("up", 1000),
-        ("fire", 1),
-        ("zero", 0),
-    ),
+#    "asouyave" : (
+#        ("right", 5000),
+#        ("up", 1000),
+#        ("fire", 1),
+#        ("zero", 0),
+#    ),
     "gbunney" : (
-        ("zero", 0), 
-        ("right", 4500),
-        ("up", 100),
+        ("right", 3500),
+        ("up", 350),
         ("fire", 1),
         ("zero", 0),
     ),
+
 }
 
 BAMBOO_HOST      = '10.53.116.60'
@@ -233,7 +227,7 @@ def detect_failed_builds():
   while True:
     try:
       retrieve_bamboo_feed()
-      if PREV_LATEST_BUILD_GUID != LATEST_BUILD_GUID:
+      if PREV_LATEST_BUILD_GUID != None and PREV_LATEST_BUILD_GUID != LATEST_BUILD_GUID:
         print 'found new failed build!'
         print LATEST_BUILD.title
         
