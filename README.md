@@ -4,7 +4,7 @@
 
 ### Summary
 
-Ikara is a <a href="http://www.atlassian.com/software/bamboo/">Bamboo</a> build watcher that punishes those
+Ikara is a <a href="http://www.atlassian.com/software/bamboo/">Bamboo</a> build watcher from <a href="http://4impact.com.au">4impact</a> that punishes those
 who break the build. It is based on <a href="https://github.com/codedance/Retaliation">retailiation</a> for Jenkins,
 but programmed to work with Atlassian Bamboo.
 
@@ -42,6 +42,8 @@ BAMBOO_PASSWORD  = 'gbunney'
 
       Where <build-key> is the key of the build you want to monitor.
 
+  7.  Sit back, relax and let Ikara do your dirty 'build-cop' work for you
+  
 ### Other Uses
  
 `ikara.py` also doubles as a command-line scripting API for the *Dream Cheeky 
