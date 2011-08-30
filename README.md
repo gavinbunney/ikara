@@ -5,8 +5,8 @@
 ### Summary
 
 Ikara is a <a href="http://www.atlassian.com/software/bamboo/">Bamboo</a> build watcher from <a href="http://4impact.com.au">4impact</a> that punishes those
-who break the build. It is based on <a href="https://github.com/codedance/Retaliation">retailiation</a> for Jenkins,
-but programmed to work with Atlassian Bamboo.
+who break the build. Named after an Australian Aboriginal word for "throwing stick", it is based on <a href="https://github.com/codedance/Retaliation">retailiation</a> for Jenkins,
+but designed to work with Atlassian Bamboo.
 
 Build breakages are detected through polling the failed-build rss feed.
 
