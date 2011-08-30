@@ -1,5 +1,3 @@
-Forget svn blame - this is Bamboo blame!
-
 ## Ikara - forget svn blame, this is Bamboo blame!
 
 *Rule with an iron first - punish failure... automatically!*
