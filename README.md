@@ -20,14 +20,23 @@ Build breakages are detected through polling the failed-build rss feed.
   3.  Download the <a href="https://raw.github.com/4impact/ikara/master/ikara.py">ikara.py</a> 
       script onto the system connected to your missile launcher.
 
-  3.  Modify your `COMMAND_SETS` in the `ikara.py` script to define your targeting 
+  4.  Modify the Bamboo configuration in the `ikara.py` script to define the Bamboo server details.
+      
+      ```
+BAMBOO_HOST      = '10.53.116.60'
+BAMBOO_PORT      = '8085'
+BAMBOO_USERNAME  = 'gbunney'
+BAMBOO_PASSWORD  = 'gbunney'
+```
+
+  5.  Modify your `COMMAND_SETS` in the `ikara.py` script to define your targeting 
       commands for each one of your build-braking coders (their user ID as configured in Bamboo).
  
       You can test a set by calling ikara.py with the target name. e.g.:  
 
            python ikara.py "[developer's user name]"
 
-  4.  Start listening for failed build events by running the command:
+  6.  Start listening for failed build events by running the command:
 
            python ikara.py monitor <build-key>
 
