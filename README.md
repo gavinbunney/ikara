@@ -11,6 +11,8 @@ but designed to work with Atlassian Bamboo.
 Build breakages are detected through polling the failed-build rss feed. When a failed build is detected,
 the Missle Launcher goes to work 'notifying' the offenders!
 
+<img src="https://github.com/4impact/ikara/raw/master/images/thunder.jpg"/>
+
 ### How to Use
 
   1.  Mount your <a href="http://www.dreamcheeky.com/thunder-missile-launcher">Dream Cheeky Thunder USB Missile Launcher</a> 
