@@ -8,7 +8,8 @@ Ikara is a <a href="http://www.atlassian.com/software/bamboo/">Bamboo</a> build 
 who break the build. Named after an Australian Aboriginal word for "throwing stick", it is based on <a href="https://github.com/codedance/Retaliation">retailiation</a> for Jenkins,
 but designed to work with Atlassian Bamboo.
 
-Build breakages are detected through polling the failed-build rss feed.
+Build breakages are detected through polling the failed-build rss feed. When a failed build is detected,
+the Missle Launcher goes to work 'notifying' the offenders!
 
 ### How to Use
 
