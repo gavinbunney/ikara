@@ -26,10 +26,6 @@
 
 import sys
 import time
-import socket
-import urllib
-import re
-import json
 
 import usb.core
 import usb.util
@@ -48,11 +44,11 @@ import feedparser
 # to shoot.
 #
 COMMAND_SETS = {
-    "pdo" : (
-        ("right", 2000),
-        ("fire", 1), # Fire 1 missle
-        ("zero", 0), # Park after use for next time
-    ),
+    #"pdo" : (
+    #    ("right", 2000),
+    #    ("fire", 1),
+    #    ("zero", 0),
+    #),
     "psimon" : (
         ("right", 1250),
         ("up", 200),
@@ -200,6 +196,7 @@ def retrieve_bamboo_feed():
   auth = urllib2.HTTPBasicAuthHandler()
   auth.add_password(BAMBOO_HOST, BAMBOO_HOST, BAMBOO_USERNAME, BAMBOO_PASSWORD)
   global BUILD_FEED
+  global BAMBOO_RSS_URL
   BUILD_FEED = feedparser.parse(BAMBOO_RSS_URL, handlers=[auth])
   
   global LATEST_BUILD
@@ -227,11 +224,11 @@ def detect_failed_builds():
   while True:
     try:
       retrieve_bamboo_feed()
-      if PREV_LATEST_BUILD_GUID != None and PREV_LATEST_BUILD_GUID != LATEST_BUILD_GUID:
+      if PREV_LATEST_BUILD_GUID is not None and PREV_LATEST_BUILD_GUID != LATEST_BUILD_GUID:
         print 'found new failed build!'
-        print LATEST_BUILD.title
+        print LATEST_BUILD['title']
         
-        description = LATEST_BUILD.description
+        description = LATEST_BUILD['description']
         global LATEST_BUILD_USERS
         LATEST_BUILD_USERS = list()
         lastIdx = 0
@@ -243,9 +240,11 @@ def detect_failed_builds():
           lastIdx = description.find(userSearchKey, lastIdx) + 1
         
         for user in LATEST_BUILD_USERS:
+          print 'Targeting ' + user
           target_user(user)
-      
-      print 'waiting...'
+
+        print 'Waiting for Bamboo failed builds...'
+
       time.sleep(5)
     
     except KeyboardInterrupt:
