@@ -18,7 +18,7 @@ the Missle Launcher goes to work 'notifying' the offenders!
   1.  Mount your <a href="http://www.dreamcheeky.com/thunder-missile-launcher">Dream Cheeky Thunder USB Missile Launcher</a> 
       in a central and fixed location.
 
-  2.  Install libusb and PyUSB for your operating system
+  2.  Install libusb, PyUSB and <a href="http://www.feedparser.org/">feedparser</a> for your operating system
   
   3.  Download the <a href="https://raw.github.com/4impact/ikara/master/ikara.py">ikara.py</a> 
       script onto the system connected to your missile launcher.
@@ -43,7 +43,7 @@ BAMBOO_PASSWORD  = 'gbunney'
 
            python ikara.py monitor <build-key>
 
-      Where <build-key> is the key of the build you want to monitor.
+      Where `<build-key>` is the key of the build you want to monitor.
 
   7.  Sit back, relax and let Ikara do your dirty 'build-cop' work for you
   
