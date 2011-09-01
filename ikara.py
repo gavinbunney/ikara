@@ -44,48 +44,48 @@ import feedparser
 # to shoot.
 #
 COMMAND_SETS = {
-    #"pdo" : (
+    #"Peter Do" : (
     #    ("right", 2000),
     #    ("fire", 1),
     #    ("zero", 0),
     #),
-    "psimon" : (
+    "Patrick Simon" : (
         ("right", 1250),
         ("up", 200),
         ("fire", 1),
         ("zero", 0),
     ),
-    "psandanayake" : (
+    "Priyath Sandanayake" : (
         ("right", 1250),
         ("up", 800),
         ("fire", 1),
         ("zero", 0),
     ),
-    "cgreben" : (
+    "Chris Greben" : (
         ("right", 2100),
         ("up", 500),
         ("fire", 1),
         ("zero", 0),
     ),
-    "pbevis" : (
+    "Paul Bevis" : (
         ("right", 2700),
         ("up", 300),
         ("fire", 1),
         ("zero", 0),
     ),
-    "tromano" : (
+    "Tom Romano" : (
         ("right", 3000),
         ("up", 350),
         ("fire", 1),
         ("zero", 0),
     ),
-#    "asouyave" : (
+#    "Andy Souyave" : (
 #        ("right", 5000),
 #        ("up", 1000),
 #        ("fire", 1),
 #        ("zero", 0),
 #    ),
-    "gbunney" : (
+    "Gavin Bunney" : (
         ("right", 3500),
         ("up", 350),
         ("fire", 1),
@@ -134,8 +134,8 @@ def usage():
     print ""
     print "     <command_set_name> - run/test a defined COMMAND_SET"
     print "             e.g. run:"
-    print "                  ikara.py 'snappy'"
-    print "             to test targeting of snappy as defined in your command set."
+    print "                  ikara.py 'Snappy Tom'"
+    print "             to test targeting of 'Snappy Tom' as defined in your command set."
     print ""
 
 ########################################################################################################################
@@ -229,27 +229,26 @@ def detect_failed_builds():
   while True:
     try:
       retrieve_bamboo_feed()
+      offending_users = set()
 
       for buildKey in BUILD_KEYS:
         build = BUILDS[buildKey]
 
         if build['previous_latest_guid'] is not None and build['previous_latest_guid'] != build['latest_guid']:
-          print 'Found new failed build!'
           print build['latest_build']['title']
 
           description = build['latest_build']['description']
-          latestBuildUsers = list()
           lastIdx = 0
-          userSearchKey = '/browse/user/'
-          while description.find(userSearchKey, lastIdx) >= 0 and description.find(".</p>") > description.find(userSearchKey, lastIdx):
-            userIdx = description.find(userSearchKey, lastIdx)
-            userEndIdx = description.find(">", userIdx) - 1
-            latestBuildUsers.append(description[userIdx+len(userSearchKey) : userEndIdx])
+          userSearchKey = ' made the following changes at '
+          while description.find(userSearchKey, lastIdx) >= 0:
+            userEndIdx = description.find(userSearchKey, lastIdx)
+            userStartIdx = description.rfind("\n", 0, userEndIdx)
+            offending_users.add(description[userStartIdx : userEndIdx].lstrip().rstrip())
             lastIdx = description.find(userSearchKey, lastIdx) + 1
 
-          for user in latestBuildUsers:
-            print 'Targeting ' + user
-            target_user(user)
+      for user in offending_users:
+        print 'Targeting ' + user
+        target_user(user)
 
       print 'Waiting for Bamboo failed builds...'
       time.sleep(5)
