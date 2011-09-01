@@ -37,19 +37,20 @@ BAMBOO_PASSWORD  = 'gbunney'
  
       You can test a set by calling ikara.py with the target name. e.g.:  
 
-      ```
+      ```python
 python ikara.py "[developer's user name]"
 ```
 
   6.  Start listening for failed build events by running the command:
 
-      ```
+      ```python
 python ikara.py monitor <build-key(s)>
 ```
 
       Where `<build-key(s)>` is a comma separate list of plan keys for the builds you want to monitor.
 
-      e.g. to monitor both TRUNK and PLUGINS: ```
+      e.g. to monitor both TRUNK and PLUGINS:
+      ```python
 python ikara.py monitor TRUNK,PLUGINS
 ```
 
