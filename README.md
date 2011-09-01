@@ -25,7 +25,7 @@ the Missle Launcher goes to work 'notifying' the offenders!
 
   4.  Modify the Bamboo configuration in the `ikara.py` script to define the Bamboo server details.
       
-      ```
+      ```python
 BAMBOO_HOST      = '10.53.116.60'
 BAMBOO_PORT      = '8085'
 BAMBOO_USERNAME  = 'gbunney'
@@ -37,13 +37,21 @@ BAMBOO_PASSWORD  = 'gbunney'
  
       You can test a set by calling ikara.py with the target name. e.g.:  
 
-           python ikara.py "[developer's user name]"
+      ```
+python ikara.py "[developer's user name]"
+```
 
   6.  Start listening for failed build events by running the command:
 
-           python ikara.py monitor <build-key>
+      ```
+python ikara.py monitor <build-key(s)>
+```
 
-      Where `<build-key>` is the key of the build you want to monitor.
+      Where `<build-key(s)>` is a comma separate list of plan keys for the builds you want to monitor.
+
+      e.g. to monitor both TRUNK and PLUGINS: ```
+python ikara.py monitor TRUNK,PLUGINS
+```
 
   7.  Sit back, relax and let Ikara do your dirty 'build-cop' work for you
   

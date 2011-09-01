@@ -112,17 +112,17 @@ STOP    = 0x20
 
 DEVICE = None
 
-LATEST_BUILD      = dict()
-LATEST_BUILD_GUID = None
-LATEST_BUILD_USERS = list()
-PREV_LATEST_BUILD_GUID = None
+BUILD_KEYS        = list()
+BUILDS            = dict()
+BAMBOO_RSS_URL    = ''
 
+########################################################################################################################
 def usage():
     print "Usage: ikara.py [command] [value]"
     print ""
     print "   commands:"
     print "     monitor - poll the bamboo rss feed for new failed builds,"
-    print "               then unleash warfare!!"
+    print "               for the comma seperated list of build-keys"
     print ""
     print "     up    - move up <value> milliseconds"
     print "     down  - move down <value> milliseconds"
@@ -138,7 +138,7 @@ def usage():
     print "             to test targeting of snappy as defined in your command set."
     print ""
 
-
+########################################################################################################################
 def setup_usb():
     # Tested only with the Cheeky Dream Thunder
     global DEVICE 
@@ -149,17 +149,17 @@ def setup_usb():
 
     DEVICE.set_configuration()
 
-
+########################################################################################################################
 def send_cmd(cmd):
     DEVICE.ctrl_transfer(0x21, 0x09, 0, 0, [0x02, cmd, 0x00,0x00,0x00,0x00,0x00,0x00])
 
-
+########################################################################################################################
 def send_move(cmd, duration_ms):
     send_cmd(cmd)
     time.sleep(duration_ms / 1000.0)
     send_cmd(STOP)
 
-
+########################################################################################################################
 def run_command(command, value):
     command = command.lower()
     if command == "right":
@@ -187,28 +187,32 @@ def run_command(command, value):
     else:
         print "Error: Unknown command: '%s'" % command
 
-
+########################################################################################################################
 def run_command_set(commands):
     for cmd, value in commands:
         run_command(cmd, value)
 
+########################################################################################################################
 def retrieve_bamboo_feed():
+
   auth = urllib2.HTTPBasicAuthHandler()
   auth.add_password(BAMBOO_HOST, BAMBOO_HOST, BAMBOO_USERNAME, BAMBOO_PASSWORD)
-  global BUILD_FEED
-  global BAMBOO_RSS_URL
-  BUILD_FEED = feedparser.parse(BAMBOO_RSS_URL, handlers=[auth])
-  
-  global LATEST_BUILD
-  global LATEST_BUILD_GUID
-  global PREV_LATEST_BUILD_GUID
-  
-  PREV_LATEST_BUILD_GUID = LATEST_BUILD_GUID 
-  
-  if len(BUILD_FEED.entries) > 0:
-    LATEST_BUILD = BUILD_FEED.entries[0]
-    LATEST_BUILD_GUID = LATEST_BUILD.guid
 
+  global BUILDS
+  for buildKey in BUILD_KEYS:
+
+    buildFeed = feedparser.parse(BAMBOO_RSS_URL + buildKey, handlers=[auth])
+
+    if buildKey in BUILDS:
+      BUILDS[buildKey]['previous_latest_guid'] = BUILDS[buildKey]['latest_guid']
+    else:
+      BUILDS[buildKey] = dict(latest_build = dict(), latest_guid = None, previous_latest_guid = None)
+
+    if len(buildFeed.entries) > 0:
+      BUILDS[buildKey]['latest_build'] = buildFeed.entries[0]
+      BUILDS[buildKey]['latest_guid'] = buildFeed.entries[0].guid
+
+########################################################################################################################
 def target_user(user):
     match = False
     for key in COMMAND_SETS:
@@ -219,38 +223,42 @@ def target_user(user):
             break
     if not match:
         print "WARNING: No target command set defined for user %s" % user
-                
+
+########################################################################################################################
 def detect_failed_builds():
   while True:
     try:
       retrieve_bamboo_feed()
-      if PREV_LATEST_BUILD_GUID is not None and PREV_LATEST_BUILD_GUID != LATEST_BUILD_GUID:
-        print 'found new failed build!'
-        print LATEST_BUILD['title']
-        
-        description = LATEST_BUILD['description']
-        global LATEST_BUILD_USERS
-        LATEST_BUILD_USERS = list()
-        lastIdx = 0
-        userSearchKey = '/browse/user/'
-        while description.find(userSearchKey, lastIdx) >= 0 and description.find(".</p>") > description.find(userSearchKey, lastIdx):
-          userIdx = description.find(userSearchKey, lastIdx)
-          userEndIdx = description.find(">", userIdx) - 1
-          LATEST_BUILD_USERS.append(description[userIdx+len(userSearchKey) : userEndIdx])
-          lastIdx = description.find(userSearchKey, lastIdx) + 1
-        
-        for user in LATEST_BUILD_USERS:
-          print 'Targeting ' + user
-          target_user(user)
 
-        print 'Waiting for Bamboo failed builds...'
+      for buildKey in BUILD_KEYS:
+        build = BUILDS[buildKey]
 
+        if build['previous_latest_guid'] is not None and build['previous_latest_guid'] != build['latest_guid']:
+          print 'Found new failed build!'
+          print build['latest_build']['title']
+
+          description = build['latest_build']['description']
+          latestBuildUsers = list()
+          lastIdx = 0
+          userSearchKey = '/browse/user/'
+          while description.find(userSearchKey, lastIdx) >= 0 and description.find(".</p>") > description.find(userSearchKey, lastIdx):
+            userIdx = description.find(userSearchKey, lastIdx)
+            userEndIdx = description.find(">", userIdx) - 1
+            latestBuildUsers.append(description[userIdx+len(userSearchKey) : userEndIdx])
+            lastIdx = description.find(userSearchKey, lastIdx) + 1
+
+          for user in latestBuildUsers:
+            print 'Targeting ' + user
+            target_user(user)
+
+      print 'Waiting for Bamboo failed builds...'
       time.sleep(5)
-    
+
     except KeyboardInterrupt:
       print 'bye!'
       break
 
+########################################################################################################################
 def main(args):
 
     if len(args) < 2:
@@ -261,12 +269,14 @@ def main(args):
 
     if args[1] == "monitor":
       if len(args) != 3:
-        print "Specify the Build Key to watch"
+        print "Specify the Build Key(s) to watch"
         sys.exit(1)
       
       print "Waiting for Bamboo failed builds..."
+      global BUILD_KEYS
+      BUILD_KEYS = args[2].split(',')
       global BAMBOO_RSS_URL
-      BAMBOO_RSS_URL = 'http://%s:%s/rss/createAllBuildsRssFeed.action?feedType=rssFailed&buildKey=%s' % (BAMBOO_HOST, BAMBOO_PORT, args[2])
+      BAMBOO_RSS_URL = 'http://%s:%s/rss/createAllBuildsRssFeed.action?feedType=rssFailed&buildKey=' % (BAMBOO_HOST, BAMBOO_PORT)
       
       detect_failed_builds()
       # Will never return
