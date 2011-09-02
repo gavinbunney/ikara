@@ -11,6 +11,8 @@ but designed to work with Atlassian Bamboo.
 Build breakages are detected through polling the failed-build rss feed. When a failed build is detected,
 the Missle Launcher goes to work 'notifying' the offenders!
 
+### Video of notification
+
 <a href="http://youtu.be/lWAE0pVe7D0"><img src="https://github.com/4impact/ikara/raw/master/images/video.png" /></a>
 
 ### How to Use
