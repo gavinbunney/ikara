@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2011 4impact Technology Services, Brisbane, Australia http://www.4impact.com.au
+# Copyright 2011 Gavin Bunney
 # 
 # Based on retaliation.py by PaperCut Software Int. Pty. Ltd. 
 # Copyright 2011 PaperCut Software Int. Pty. Ltd. http://www.papercut.com/
